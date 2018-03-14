@@ -13,7 +13,6 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 """
 
-
 from collections import defaultdict
 import numpy as np
 import gym
@@ -241,7 +240,7 @@ def main(env_id, batch_size, discount, learning_rate, n_itrs, render, use_baseli
                     :param a_t: Either a vector of size |A| or an integer, depending on the environment
                     :param r_t: A scalar
                     :param b_t: A scalar
-                    :param get_grad_logp_action: A function, mapping from (theta, ob, action) to the gradient (a 
+                    :param get_grad_logp_action: A function, mapping from (theta, ob, action) to the gradient (a
                     matrix of size |A| * (|S|+1) )
                     :return: A tuple, consisting of a scalar and a matrix of size |A| * (|S|+1)
                     """
@@ -272,7 +271,7 @@ def main(env_id, batch_size, discount, learning_rate, n_itrs, render, use_baseli
 
         def compute_baselines(all_returns):
             """
-            :param all_returns: A list of size T, where the t-th entry is a list of numbers, denoting the returns 
+            :param all_returns: A list of size T, where the t-th entry is a list of numbers, denoting the returns
             collected at time step t across different episodes
             :return: A vector of size T
             """
@@ -297,11 +296,11 @@ def main(env_id, batch_size, discount, learning_rate, n_itrs, render, use_baseli
             def compute_fisher_matrix(theta, get_grad_logp_action, all_observations, all_actions):
                 """
                 :param theta: A matrix of size |A| * (|S|+1)
-                :param get_grad_logp_action: A function, mapping from (theta, ob, action) to the gradient (a matrix 
+                :param get_grad_logp_action: A function, mapping from (theta, ob, action) to the gradient (a matrix
                 of size |A| * (|S|+1) )
                 :param all_observations: A list of vectors of size |S|
                 :param all_actions: A list of vectors of size |A|
-                :return: A matrix of size (|A|*(|S|+1)) * (|A|*(|S|+1)), i.e. #columns and #rows are the number of 
+                :return: A matrix of size (|A|*(|S|+1)) * (|A|*(|S|+1)), i.e. #columns and #rows are the number of
                 entries in theta
                 """
                 d = len(theta.flatten())

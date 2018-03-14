@@ -17,7 +17,6 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 import click
 import numpy as np
 import gym
-
 from simplepg.simple_utils import include_bias, weighted_sample
 
 
