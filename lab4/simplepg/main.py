@@ -34,7 +34,9 @@ def point_get_logp_action(theta, ob, action):
     """
     ob_1 = include_bias(ob)
     mean = theta.dot(ob_1)
+    print(action, mean)
     zs = action - mean
+    print(-0.5 * np.log(2 * np.pi) * theta.shape[0] - 0.5 * np.sum(np.square(zs)), " THIS ISSSS FUCKinG STRANGE")
     return -0.5 * np.log(2 * np.pi) * theta.shape[0] - 0.5 * np.sum(np.square(zs))
 
 
@@ -46,6 +48,9 @@ def point_get_grad_logp_action(theta, ob, action):
     :return: A matrix of size |A| * (|S|+1)
     """
     grad = np.zeros_like(theta)
+    # (a − θ T s̃)s̃ T
+    ob_1 = include_bias(ob)
+    grad = np.outer((action - theta.dot(ob_1)), ob_1)
     "*** YOUR CODE HERE ***"
     return grad
 
@@ -247,6 +252,8 @@ def main(env_id, batch_size, discount, learning_rate, n_itrs, render, use_baseli
                     R_t = 0.
                     pg_theta = np.zeros_like(theta)
                     "*** YOUR CODE HERE ***"
+                    R_t = r_t + discount * R_tplus1
+                    pg_theta = get_grad_logp_action(theta, s_t, a_t) * (R_t - b_t)
                     return R_t, pg_theta
 
                 # Test the implementation, but only once
@@ -277,7 +284,11 @@ def main(env_id, batch_size, discount, learning_rate, n_itrs, render, use_baseli
             """
             baselines = np.zeros(len(all_returns))
             for t in range(len(all_returns)):
-                "*** YOUR CODE HERE ***"
+                #print(all_returns[t], " returns")
+                if(len(all_returns[t]) == 0):
+                    baselines[t] = 0
+                else:
+                    baselines[t] = sum(all_returns[t])/len(all_returns[t])
             return baselines
 
         if use_baseline:
