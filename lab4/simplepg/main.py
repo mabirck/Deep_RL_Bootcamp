@@ -34,9 +34,9 @@ def point_get_logp_action(theta, ob, action):
     """
     ob_1 = include_bias(ob)
     mean = theta.dot(ob_1)
-    print(action, mean)
+    #print(action, mean)
     zs = action - mean
-    print(-0.5 * np.log(2 * np.pi) * theta.shape[0] - 0.5 * np.sum(np.square(zs)), " THIS ISSSS FUCKinG STRANGE")
+    #print(-0.5 * np.log(2 * np.pi) * theta.shape[0] - 0.5 * np.sum(np.square(zs)), " THIS ISSSS FUCKinG STRANGE")
     return -0.5 * np.log(2 * np.pi) * theta.shape[0] - 0.5 * np.sum(np.square(zs))
 
 
@@ -116,8 +116,13 @@ def cartpole_get_grad_logp_action(theta, ob, action):
     :param action: An integer
     :return: A matrix of size |A| * (|S|+1)
     """
+    #print(theta.shape)
     grad = np.zeros_like(theta)
     "*** YOUR CODE HERE ***"
+    p = softmax(compute_logits(theta, ob))
+    one_hot = np.zeros(theta.shape[0])
+    one_hot[action] = 1
+    grad = np.outer((one_hot - p), include_bias(ob))
     return grad
 
 
@@ -314,9 +319,19 @@ def main(env_id, batch_size, discount, learning_rate, n_itrs, render, use_baseli
                 :return: A matrix of size (|A|*(|S|+1)) * (|A|*(|S|+1)), i.e. #columns and #rows are the number of
                 entries in theta
                 """
+                #F = E ∇ θ log π θ (a|s)∇ θ log π θ (a|s) T
+
                 d = len(theta.flatten())
                 F = np.zeros((d, d))
                 "*** YOUR CODE HERE ***"
+                for i in range(len(all_observations)):
+                    ob = all_observations[i]
+                    action = all_actions[i]
+                    grad_logp = get_grad_logp_action(theta, ob, action).flatten()
+                    F += np.outer(grad_logp, grad_logp.T)
+
+                F /= len(all_actions)
+
                 return F
 
             def compute_natural_gradient(F, grad, reg=1e-4):
