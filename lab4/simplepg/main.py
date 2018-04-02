@@ -343,6 +343,17 @@ def main(env_id, batch_size, discount, learning_rate, n_itrs, render, use_baseli
                 """
                 natural_grad = np.zeros_like(grad)
                 "*** YOUR CODE HERE ***"
+                I = np.identity(F.shape[0])
+
+                #print(I)
+
+                F_inv = np.linalg.inv(F+reg*I)
+
+                #print(F_inv)
+
+                return  np.dot(F_inv,grad.flatten()).reshape(grad.shape)
+
+
                 return natural_grad
 
             def compute_step_size(F, natural_grad, natural_step_size):
@@ -354,6 +365,11 @@ def main(env_id, batch_size, discount, learning_rate, n_itrs, render, use_baseli
                 """
                 step_size = 0.
                 "*** YOUR CODE HERE ***"
+                step_size = 0.
+                denom = np.dot(natural_grad.flatten().T,np.dot(F,natural_grad.flatten()))
+
+                step_size = np.sqrt((2*natural_step_size)/denom)
+
                 return step_size
 
             test_once(compute_fisher_matrix)
